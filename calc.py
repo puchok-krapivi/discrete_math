@@ -1,9 +1,11 @@
 import random
 
-massivi = {}
+massivi = {'A': [1, 2, 3, 4, 5],
+           'B': [-10, 1, 2, 6, 7],
+           'C': [-29, -19, 8]}
 check_1 = 0
-actions = ['!', '+', '-', '&']
-actions_sk = ['!', '+', '-', '&', '(', ')']
+actions = ['!', '+', '-', '&', '*']
+actions_sk = ['!', '+', '-', '&', '(', ')', '*']
 universum = [-50, -49, -48, -47, -46, -45, -44, -43, -42, -41, -40, -39, -38, -37, -36, -35, -34, -33, -32, -31,
              -30, -29, -28, -27, -26, -25, -24, -23, -22, -21, -20, -19, -18, -17, -16, -15, -14, -13, -12, -11, -10,
              -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -13,7 +15,7 @@ alp = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o'
        'w', 'x', 'y', 'z']
 
 while check_1 == 0:
-    print('**************************************************')
+    print('*************************************************')
     print('ВЫБОР ДЕЙСТВИЯ')
     print('1 - Создать множество')
     print('2 - Показать множества')
@@ -366,6 +368,7 @@ while check_1 == 0:
         print('объединение - +')
         print('разность - -')
         print('дополнение - !')
+        print('пересечение - *')
         print('симметрическая разность - &')
         print('Пример написания формулы - !A+(B-C)')
         print('Пример написания формулы - !A+B-C')
@@ -400,6 +403,8 @@ while check_1 == 0:
             formula_mod_sk = formula_mod[formula_mod.index('(') + 1:formula_mod.index(')')]
             formula_mod = formula_mod[:formula_mod.index('(')] + formula_mod[formula_mod.index(')') + 1:]
             formula_mod.append('answer_sk')
+            print(formula_mod)
+            print(formula_mod_sk)
             print('Введенная формула: ' + formula)
             i1, i2 = 0, 0
             while 1 < len(formula_mod_sk):
@@ -411,6 +416,19 @@ while check_1 == 0:
                             massivi[massiv_2].append(elem)
                     massivi[massiv_2].sort()
                     formula_mod_sk[i1 + 1] = massiv_2
+                    formula_mod_sk.pop(i1)
+                    i1 = 0
+                elif formula_mod_sk[i1] == '*':
+                    massiv_1 = formula_mod_sk[i1 - 1]
+                    massiv_2 = formula_mod_sk[i1 + 1]
+                    massiv_3 = 'answer_sk'
+                    massivi[massiv_3] = []
+                    for elem in massivi[massiv_1]:
+                        if elem in massivi[massiv_2]:
+                            massivi[massiv_3].append(elem)
+                    massivi[massiv_3].sort()
+                    formula_mod_sk[i1 - 1] = massiv_3
+                    formula_mod_sk.pop(i1)
                     formula_mod_sk.pop(i1)
                     i1 = 0
                 elif formula_mod_sk[i1] == '+':
@@ -484,13 +502,26 @@ while check_1 == 0:
                     formula_mod[i1 + 1] = massiv_2
                     formula_mod.pop(i1)
                     i1 = 0
+                elif formula_mod[i1] == '*':
+                    massiv_1 = formula_mod[i1 - 1]
+                    massiv_2 = formula_mod[i1 + 1]
+                    massiv_3 = 'answer'
+                    massivi[massiv_3] = []
+                    for elem in massivi[massiv_1]:
+                        if elem in massivi[massiv_2]:
+                            massivi[massiv_3].append(elem)
+                    massivi[massiv_3].sort()
+                    formula_mod[i1 - 1] = massiv_3
+                    formula_mod.pop(i1)
+                    formula_mod.pop(i1)
+                    i1 = 0
                 elif formula_mod[i1] == '+':
                     massiv_1 = formula_mod[i1 - 1]
                     massiv_2 = formula_mod[i1 + 1]
                     massiv_3 = 'answer'
                     massivi[massiv_3] = massivi[massiv_1]
-                    for elem in massivi[str(massiv_2)]:
-                        if elem not in massivi[str(massiv_1)]:
+                    for elem in massivi[massiv_2]:
+                        if elem not in massivi[massiv_1]:
                             massivi[massiv_3].append(elem)
                     massivi[massiv_3].sort()
                     formula_mod[i1 - 1] = massiv_3
